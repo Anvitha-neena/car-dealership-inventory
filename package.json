@@ -1,0 +1,14 @@
+{
+  "name": "car-dealership-inventory",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "test:backend": "npm run test --workspace=backend",
+    "dev:backend": "npm run dev --workspace=backend"
+  }
+}
