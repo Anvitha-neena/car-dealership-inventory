@@ -14,7 +14,7 @@ export class VehicleService {
   }
 
   static async list(search: SearchVehicleInput = {}) {
-    const filters: FilterQuery<VehicleDocument> = { quantity: { $gt: 0 } };
+    const filters: FilterQuery<VehicleDocument> = search.includeOutOfStock ? {} : { quantity: { $gt: 0 } };
 
     if (search.make) filters.make = escapedExpression(search.make);
     if (search.model) filters.model = escapedExpression(search.model);

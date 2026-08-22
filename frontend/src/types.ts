@@ -15,3 +15,5 @@ export type Vehicle = {
   price: number;
   quantity: number;
 };
+
+export type VehicleInput = Omit<Vehicle, 'id'>;

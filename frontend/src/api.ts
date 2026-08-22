@@ -1,4 +1,4 @@
-import type { Session, Vehicle } from './types';
+import type { Session, Vehicle, VehicleInput } from './types';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
@@ -19,6 +19,7 @@ async function request<T>(path: string, options: RequestInit = {}, token?: strin
     throw new Error(body.error ?? 'Request failed.');
   }
 
+  if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
 }
 
@@ -30,5 +31,13 @@ export const api = {
   vehicles: (token: string, search: URLSearchParams) =>
     request<Vehicle[]>(`/api/vehicles/search?${search.toString()}`, {}, token),
   purchase: (token: string, id: string) =>
-    request<Vehicle>(`/api/vehicles/${id}/purchase`, { method: 'POST' }, token)
+    request<Vehicle>(`/api/vehicles/${id}/purchase`, { method: 'POST' }, token),
+  createVehicle: (token: string, input: VehicleInput) =>
+    request<Vehicle>('/api/vehicles', { method: 'POST', body: JSON.stringify(input) }, token),
+  updateVehicle: (token: string, id: string, input: Partial<VehicleInput>) =>
+    request<Vehicle>(`/api/vehicles/${id}`, { method: 'PUT', body: JSON.stringify(input) }, token),
+  deleteVehicle: (token: string, id: string) =>
+    request<void>(`/api/vehicles/${id}`, { method: 'DELETE' }, token),
+  restockVehicle: (token: string, id: string, quantity: number) =>
+    request<Vehicle>(`/api/vehicles/${id}/restock`, { method: 'POST', body: JSON.stringify({ quantity }) }, token)
 };

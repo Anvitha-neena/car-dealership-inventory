@@ -21,7 +21,8 @@ export const searchVehicleSchema = z
     model: z.string().trim().min(1).max(80).optional(),
     category: z.string().trim().min(1).max(50).optional(),
     minPrice: z.coerce.number().nonnegative().optional(),
-    maxPrice: z.coerce.number().nonnegative().optional()
+    maxPrice: z.coerce.number().nonnegative().optional(),
+    includeOutOfStock: z.enum(['true', 'false']).transform((value) => value === 'true').optional()
   })
   .refine((value) => value.minPrice === undefined || value.maxPrice === undefined || value.minPrice <= value.maxPrice, {
     message: 'minPrice cannot be greater than maxPrice.'
