@@ -17,6 +17,7 @@ export default function App() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [filters, setFilters] = useState<Filters>(blankFilters);
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [loginAs, setLoginAs] = useState<'customer' | 'admin'>('customer');
@@ -49,7 +50,17 @@ export default function App() {
     finally { setLoading(false); }
   };
   const replace = (vehicle: Vehicle) => setVehicles((items) => items.map((item) => item.id === vehicle.id ? vehicle : item));
-  const purchase = async (id: string) => { if (!session) return; setLoading(true); setError(''); try { replace(await api.purchase(session.token, id)); } catch (caught) { setError(caught instanceof Error ? caught.message : 'Purchase failed.'); } finally { setLoading(false); } };
+  const purchase = async (id: string) => {
+    if (!session) return;
+    const vehicle = vehicles.find((item) => item.id === id);
+    setLoading(true); setError(''); setNotice('');
+    try {
+      if (!vehicle?.quantity) throw new Error('Vehicle is out of stock.');
+      replace(await api.purchase(session.token, id));
+      setNotice(`${vehicle.make} ${vehicle.model} successfully purchased.`);
+    } catch (caught) { setError(caught instanceof Error ? caught.message : 'Purchase failed.'); }
+    finally { setLoading(false); }
+  };
   const restock = async (id: string, quantity: number) => { if (!session) return; setLoading(true); setError(''); try { replace(await api.restockVehicle(session.token, id, quantity)); } catch (caught) { setError(caught instanceof Error ? caught.message : 'Restock failed.'); } finally { setLoading(false); } };
   const remove = async (id: string) => { if (!session || !window.confirm('Delete this vehicle from inventory?')) return; setLoading(true); setError(''); try { await api.deleteVehicle(session.token, id); setVehicles((items) => items.filter((item) => item.id !== id)); } catch (caught) { setError(caught instanceof Error ? caught.message : 'Delete failed.'); } finally { setLoading(false); } };
   const edit = (vehicle: Vehicle) => { setEditingId(vehicle.id); setForm({ make: vehicle.make, model: vehicle.model, category: vehicle.category, price: String(vehicle.price), quantity: String(vehicle.quantity) }); window.scrollTo({ top: 0, behavior: 'smooth' }); };
@@ -71,6 +82,6 @@ export default function App() {
   return <main className="app-shell"><header><div><p className="eyebrow">MOTORSTOCK</p><h1>{isAdmin ? 'Inventory control' : 'Available inventory'}</h1></div><div className="profile"><span>{session.user.name} · {session.user.role}</span><button onClick={() => { localStorage.removeItem(SESSION_KEY); setSession(null); }}>Sign out</button></div></header><section className="dashboard-grid"><article><p className="eyebrow">VEHICLES</p><strong>{vehicles.length}</strong><span>{isAdmin ? 'tracked models' : 'available choices'}</span></article><article><p className="eyebrow">UNITS IN STOCK</p><strong>{totalUnits}</strong><span>ready for purchase</span></article>{isAdmin ? <><article><p className="eyebrow">OUT OF STOCK</p><strong>{zeroStock}</strong><span>need restocking</span></article><article><p className="eyebrow">INVENTORY VALUE</p><strong>${inventoryValue.toLocaleString()}</strong><span>current stock value</span></article></> : <article><p className="eyebrow">WELCOME</p><strong>Ready</strong><span>find your next vehicle</span></article>}</section>
     {isAdmin && <section className="admin-form panel"><div><p className="eyebrow">ADMINISTRATION</p><h2>{editingId ? 'Edit vehicle' : 'Add a vehicle'}</h2></div><form onSubmit={save}>{(Object.keys(blankVehicle) as Array<keyof VehicleForm>).map((field) => <label key={field}>{field === 'price' ? 'Price (USD)' : field[0].toUpperCase() + field.slice(1)}<input required type={field === 'price' || field === 'quantity' ? 'number' : 'text'} min={field === 'price' || field === 'quantity' ? '0' : undefined} step={field === 'price' ? '0.01' : '1'} value={form[field]} onChange={(event) => setForm({ ...form, [field]: event.target.value })} /></label>)}<button className="primary" disabled={loading}>{editingId ? 'Save changes' : 'Add vehicle'}</button>{editingId && <button type="button" onClick={() => { setEditingId(null); setForm(blankVehicle); }}>Cancel</button>}</form></section>}
     <section className="toolbar panel"><form onSubmit={(event) => { event.preventDefault(); void loadVehicles(); }}>{(Object.keys(blankFilters) as Array<keyof Filters>).map((filter) => <input key={filter} value={filters[filter]} type={filter.includes('Price') ? 'number' : 'text'} min={filter.includes('Price') ? '0' : undefined} placeholder={filter === 'minPrice' ? 'Min price' : filter === 'maxPrice' ? 'Max price' : `Filter by ${filter}`} onChange={(event) => setFilters({ ...filters, [filter]: event.target.value })} />)}<button className="primary" disabled={loading}>Search</button><button type="button" onClick={() => { setFilters(blankFilters); void loadVehicles(session, blankFilters); }}>Clear</button></form></section>
-    {error && <p className="error">{error}</p>}{loading && !vehicles.length ? <p className="muted">Loading inventory…</p> : <section className="vehicle-grid">{vehicles.map((vehicle) => <VehicleCard key={vehicle.id} vehicle={vehicle} onPurchase={(id) => void purchase(id)} isAdmin={isAdmin} onEdit={edit} onDelete={(id) => void remove(id)} onRestock={(id, quantity) => void restock(id, quantity)} busy={loading} />)}</section>}{!loading && !vehicles.length && <p className="muted">No vehicles match your filters.</p>}
+    {notice && <p className="notice" role="status">{notice}</p>}{error && <p className="error" role="alert">{error}</p>}{loading && !vehicles.length ? <p className="muted">Loading inventory…</p> : <section className="vehicle-grid">{vehicles.map((vehicle) => <VehicleCard key={vehicle.id} vehicle={vehicle} onPurchase={(id) => void purchase(id)} isAdmin={isAdmin} onEdit={edit} onDelete={(id) => void remove(id)} onRestock={(id, quantity) => void restock(id, quantity)} busy={loading} />)}</section>}{!loading && !vehicles.length && <p className="muted">No vehicles match your filters.</p>}
   </main>;
 }
