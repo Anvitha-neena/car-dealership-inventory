@@ -1,5 +1,7 @@
 import { HydratedDocument, InferSchemaType, model, Schema } from 'mongoose';
 
+export type UserRole = 'customer' | 'admin';
+
 const userSchema = new Schema(
   {
     name: {
