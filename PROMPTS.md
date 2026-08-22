@@ -1,6 +1,20 @@
-# Raw AI Chat Transcript
+# PROMPTS — AI Collaboration Record
 
-This file preserves the available raw user prompts from the Codex-assisted development of this repository. It is intentionally not an AI-generated summary.
+This document records the available raw user prompts used during the Codex-assisted development of the Car Dealership Inventory System.
+
+The prompt text below is preserved verbatim to meet the kata requirement for transparent AI usage. Formatting, headings, and the prompt index are provided only to make the record easier to review.
+
+## Prompt index
+
+| Area | Topics covered |
+| --- | --- |
+| Planning | Technology choice, architecture, repository naming, and commit strategy |
+| Backend | MongoDB configuration, Thunder Client testing, API completion, and local setup |
+| Frontend | Dashboard, authentication experience, inventory management, and customer purchase flow |
+| UX | Confirmation dialogs, loading states, and pop-up purchase results |
+| Delivery | GitHub publishing, environment safety, and AI-use documentation |
+
+## Raw prompts
 
 ---
 
