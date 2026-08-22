@@ -40,10 +40,6 @@ ok so complete the backend part completely
 
 I've already placed my mono uri and jwt secret in backend/.env
 
-## User
-
-how do I run this in terminal
-I did cd backend now what?
 
 ## User
 
@@ -110,7 +106,3 @@ Adding...
 ## User
 
 a pop up must come not a message
-
-## User
-
-push all the recent chnages to git. aslo create a `PROMPTS.md` that must contain the required raw AI chat transcript
