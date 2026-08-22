@@ -61,4 +61,4 @@ All responses and request bodies use JSON. For protected routes, set the `Author
 
 I used Codex as a learning partner to explain architecture, propose TDD test cases, generate initial implementation drafts, and diagnose TypeScript issues. I reviewed each change, ran the test suite and build locally, and retained responsibility for the final design decisions and commits.
 
-`PROMPTS.md` will contain the required raw AI chat transcript before final submission.
+`PROMPTS.md` contains the required raw AI chat transcript before final submission.
