@@ -14,6 +14,7 @@ export type Vehicle = {
   category: string;
   price: number;
   quantity: number;
+  deletedAt: string | null;
 };
 
-export type VehicleInput = Omit<Vehicle, 'id'>;
+export type VehicleInput = Omit<Vehicle, 'id' | 'deletedAt'>;

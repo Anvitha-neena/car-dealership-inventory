@@ -45,7 +45,10 @@ All responses and request bodies use JSON. For protected routes, set the `Author
 | Search stock | `GET /api/vehicles/search?make=Toyota&minPrice=10000&maxPrice=30000` | Bearer token required; `model` and `category` also supported |
 | Add vehicle | `POST /api/vehicles` | Admin token; `{"make":"Toyota","model":"Camry","category":"Sedan","price":25000,"quantity":3}` |
 | Update vehicle | `PUT /api/vehicles/:id` | Admin token; send any vehicle fields |
-| Delete vehicle | `DELETE /api/vehicles/:id` | Admin token |
+| Move vehicle to trash | `DELETE /api/vehicles/:id` | Admin token; archives the vehicle without deleting its data |
+| View trash | `GET /api/vehicles/trash` | Admin token; lists archived vehicles |
+| Restore vehicle | `POST /api/vehicles/:id/restore` | Admin token; returns an archived vehicle to active inventory |
+| Permanently delete vehicle | `DELETE /api/vehicles/:id/permanent` | Admin token; only works for a vehicle already in trash |
 | Purchase vehicle | `POST /api/vehicles/:id/purchase` | Customer or admin token; decrements stock atomically |
 | Restock vehicle | `POST /api/vehicles/:id/restock` | Admin token; `{"quantity":5}` |
 

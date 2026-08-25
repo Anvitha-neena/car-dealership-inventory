@@ -9,7 +9,7 @@ type VehicleCardProps = {
   onEdit?: (vehicle: Vehicle) => void;
   onDelete?: (id: string) => void;
   onRestock?: (id: string, quantity: number) => void;
-  pendingAction?: 'purchase' | 'restock' | 'delete' | null;
+  pendingAction?: 'purchase' | 'restock' | 'archive' | null;
 };
 
 export function VehicleCard({ vehicle, onPurchase, isAdmin = false, onEdit, onDelete, onRestock, pendingAction }: VehicleCardProps) {
@@ -24,7 +24,7 @@ export function VehicleCard({ vehicle, onPurchase, isAdmin = false, onEdit, onDe
     <button className="primary" disabled={!vehicle.quantity || Boolean(pendingAction)} onClick={() => onPurchase(vehicle.id)}>{pendingAction === 'purchase' ? 'Purchasing…' : vehicle.quantity ? 'Purchase vehicle' : 'Out of stock'}</button>
     {isAdmin && <div className="admin-controls">
       <div className="restock-row"><input aria-label={`Restock quantity for ${vehicle.make} ${vehicle.model}`} type="number" min="1" value={restockQuantity} onChange={(event) => setRestockQuantity(Math.max(1, Number(event.target.value)))} /><button onClick={() => onRestock?.(vehicle.id, restockQuantity)} disabled={Boolean(pendingAction)}>{pendingAction === 'restock' ? 'Restocking…' : 'Restock'}</button></div>
-      <div className="button-row"><button onClick={() => onEdit?.(vehicle)} disabled={Boolean(pendingAction)}>Edit</button><button className="danger" onClick={() => onDelete?.(vehicle.id)} disabled={Boolean(pendingAction)}>{pendingAction === 'delete' ? 'Deleting…' : 'Delete'}</button></div>
+      <div className="button-row"><button onClick={() => onEdit?.(vehicle)} disabled={Boolean(pendingAction)}>Edit</button><button className="danger" onClick={() => onDelete?.(vehicle.id)} disabled={Boolean(pendingAction)}>{pendingAction === 'archive' ? 'Moving…' : 'Move to trash'}</button></div>
     </div>}
   </article>;
 }

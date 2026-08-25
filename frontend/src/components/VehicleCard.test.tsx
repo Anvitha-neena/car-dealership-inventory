@@ -7,7 +7,7 @@ describe('VehicleCard', () => {
   it('disables purchasing when inventory is zero', () => {
     render(
       <VehicleCard
-        vehicle={{ id: 'vehicle-id', make: 'Toyota', model: 'Camry', category: 'Sedan', price: 25000, quantity: 0 }}
+        vehicle={{ id: 'vehicle-id', make: 'Toyota', model: 'Camry', category: 'Sedan', price: 25000, quantity: 0, deletedAt: null }}
         onPurchase={vi.fn()}
       />
     );

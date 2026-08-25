@@ -7,6 +7,7 @@ type VehicleResponseSource = {
   category: string;
   price: number;
   quantity: number;
+  deletedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -20,6 +21,7 @@ function vehicleResponse(vehicle: VehicleResponseSource) {
     category: vehicle.category,
     price: vehicle.price,
     quantity: vehicle.quantity,
+    deletedAt: vehicle.deletedAt ?? null,
     createdAt: vehicle.createdAt,
     updatedAt: vehicle.updatedAt
   };
@@ -39,8 +41,21 @@ export class VehicleController {
     response.status(200).json(vehicleResponse(await VehicleService.update(String(request.params.id), request.body)));
   }
 
-  static async delete(request: Request, response: Response): Promise<void> {
-    await VehicleService.delete(String(request.params.id));
+  static async archive(request: Request, response: Response): Promise<void> {
+    await VehicleService.archive(String(request.params.id));
+    response.status(204).send();
+  }
+
+  static async listTrash(_request: Request, response: Response): Promise<void> {
+    response.status(200).json((await VehicleService.listTrash()).map(vehicleResponse));
+  }
+
+  static async restore(request: Request, response: Response): Promise<void> {
+    response.status(200).json(vehicleResponse(await VehicleService.restore(String(request.params.id))));
+  }
+
+  static async permanentlyDelete(request: Request, response: Response): Promise<void> {
+    await VehicleService.permanentlyDelete(String(request.params.id));
     response.status(204).send();
   }
 

@@ -38,6 +38,9 @@ export const api = {
     request<Vehicle>(`/api/vehicles/${id}`, { method: 'PUT', body: JSON.stringify(input) }, token),
   deleteVehicle: (token: string, id: string) =>
     request<void>(`/api/vehicles/${id}`, { method: 'DELETE' }, token),
+  trash: (token: string) => request<Vehicle[]>('/api/vehicles/trash', {}, token),
+  restoreVehicle: (token: string, id: string) =>
+    request<Vehicle>(`/api/vehicles/${id}/restore`, { method: 'POST' }, token),
   restockVehicle: (token: string, id: string, quantity: number) =>
     request<Vehicle>(`/api/vehicles/${id}/restock`, { method: 'POST', body: JSON.stringify({ quantity }) }, token)
 };

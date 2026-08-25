@@ -4,6 +4,7 @@
 * { box-sizing: border-box; } body { margin: 0; min-width: 320px; } button, input { font: inherit; }
 button { cursor: pointer; } button:disabled { cursor: not-allowed; opacity: .55; }
 .theme-toggle { border: 1px solid #475569 !important; border-radius: .5rem !important; background: #1e293b !important; color: #e2e8f0 !important; padding: .45rem .7rem !important; font-size: .85rem; font-weight: 700; }.auth-theme-toggle { position: absolute; top: 1rem; right: 1rem; }.auth-card { position: relative; }
+.trash-toggle { border: 1px solid #475569 !important; border-radius: .5rem !important; background: #312e81 !important; color: #e0e7ff !important; padding: .45rem .7rem !important; font-size: .85rem; font-weight: 700; }.trash-view { margin-top: 1rem; }.trash-view h2 { margin: .25rem 0; }.trash-card { border-style: dashed; border-color: #64748b; opacity: .88; }
 .auth-shell, .app-shell { min-height: 100vh; padding: 2rem; background: radial-gradient(circle at top right, #1d4ed8 0, transparent 30%), #0b1120; }
 .auth-shell { display: grid; place-items: center; }.auth-card { width: min(100%, 28rem); padding: 2rem; border: 1px solid #334155; border-radius: 1rem; background: rgba(15, 23, 42, .88); box-shadow: 0 24px 70px rgba(0,0,0,.3); }
 h1 { margin: .25rem 0 .75rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; }.eyebrow { margin: 0; color: #67e8f9; font-size: .75rem; font-weight: 700; letter-spacing: .13em; }.muted { color: #94a3b8; }.error { color: #fda4af; }

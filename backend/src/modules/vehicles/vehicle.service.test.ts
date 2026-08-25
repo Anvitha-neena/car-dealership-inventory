@@ -2,7 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const vehicleModel = vi.hoisted(() => ({
   exists: vi.fn(),
-  findOneAndUpdate: vi.fn()
+  findOneAndUpdate: vi.fn(),
+  findByIdAndUpdate: vi.fn()
 }));
 
 vi.mock('./vehicle.model.js', () => ({ Vehicle: vehicleModel }));
@@ -20,7 +21,7 @@ describe('VehicleService.purchase', () => {
     const result = await VehicleService.purchase('vehicle-id');
 
     expect(vehicleModel.findOneAndUpdate).toHaveBeenCalledWith(
-      { _id: 'vehicle-id', quantity: { $gt: 0 } },
+      { _id: 'vehicle-id', deletedAt: null, quantity: { $gt: 0 } },
       { $inc: { quantity: -1 } },
       { new: true, runValidators: true }
     );
@@ -35,5 +36,23 @@ describe('VehicleService.purchase', () => {
       statusCode: 409,
       message: 'Vehicle is out of stock.'
     });
+  });
+});
+
+describe('VehicleService.archive', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('marks a vehicle as deleted instead of permanently removing it', async () => {
+    vehicleModel.findOneAndUpdate.mockResolvedValue({ id: 'vehicle-id' });
+
+    await VehicleService.archive('vehicle-id');
+
+    expect(vehicleModel.findOneAndUpdate).toHaveBeenCalledWith(
+      { _id: 'vehicle-id', deletedAt: null },
+      { $set: { deletedAt: expect.any(Date) } },
+      { new: true }
+    );
   });
 });
